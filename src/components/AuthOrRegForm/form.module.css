@@ -1,0 +1,42 @@
+.form {
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    min-height: 100px;
+
+    border: 1px solid black;
+}
+
+.form > h2 {
+    font-size: 28px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.form > a {
+    font-size: 16px;
+    margin: 20px;
+}
+
+.input {
+    font-weight: normal;
+    font-size: 14px;
+    margin: 25px 10px 15px 10px;
+    width: 66.6%;
+}
+
+.btn {
+    padding: 2px 0px;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 20px 0px 10px 0px;
+    width: 33.3%;
+    border-radius: 10px;
+}
+
+.error {
+    margin-top: 5px;
+    color: red;
+}

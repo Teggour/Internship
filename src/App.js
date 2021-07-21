@@ -1,12 +1,14 @@
 import React from "react";
-import './App.css';
+import "./App.css";
 
-import RegistrationForm from './components/RegistrationForm/RegistrationForm'
+import AuthorizationForm from "./components/AuthOrRegForm/AuthOrRegForm";
+import Posts from "./components/Posts/Posts";
 
 function App() {
   return (
     <React.Fragment>
-      <RegistrationForm/>
+      <AuthorizationForm formType={"Authorization"} />
+      <Posts></Posts>
     </React.Fragment>
   );
 }
