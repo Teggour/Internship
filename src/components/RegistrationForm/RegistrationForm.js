@@ -20,7 +20,6 @@ function RegistrationForm() {
       })
       .then((response) => {
         setMessage("Succes!");
-        console.log(response.data.token);
       })
       .then(() => {
         axios
@@ -30,8 +29,13 @@ function RegistrationForm() {
           })
           .then((response) => {
             setMessage("Welcome!");
-            console.log(response.data.token);
             localStorage.setItem("jwtToken", response.data.token);
+
+            axios
+              .get("/auth/user")
+              .then((response) => {
+                console.log(response.data);
+              });
           });
       })
       .catch((error) => {

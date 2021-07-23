@@ -11,10 +11,10 @@ function Posts() {
     axios
       .get("/posts")
       .then((response) => {
-        setPosts(response?.data);
+        setPosts(response.data);
       })
       .catch((error) => {
-        console.warn(error.response?.data.message);
+        console.warn(error.response.data.message);
       });
   }, []);
 

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const instance = axios.create({
   baseURL: "https://nodejs-test-api-blog.herokuapp.com/api/v1",
-  timeout: 2000,
+  timeout: 5000,
   headers: { "Content-type": "application/json" },
 });
 

@@ -18,19 +18,14 @@ function AuthForm() {
       })
       .then((response) => {
         setMessage("Welcome!");
-        console.log(response.data.token);
         localStorage.setItem("jwtToken", response.data.token);
+
+        axios
+          .get("/auth/user")
+          .then((response) => {
+            console.log(response.data);
+          });
       })
-      // .then(
-      //   axios.get(
-      //     "/auth/user",
-      //     {
-      //       params: {
-      //         foo: "bar",
-      //       },
-      //     }
-      //   )
-      // )
       .catch((error) => {
         console.warn(error.response.data.error);
         setMessage(error.response.data.error + "!");

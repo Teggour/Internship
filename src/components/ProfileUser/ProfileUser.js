@@ -40,7 +40,6 @@ function FullPost({ postId }) {
           }}
         />
         <h2>{title}</h2>
-        <h5>({description})</h5>
         <p>{fullText}</p>
         <div className={style.descr}>
           <h5>
@@ -53,6 +52,10 @@ function FullPost({ postId }) {
           <h5>
             Likes: <br />
             {likes?.length}
+          </h5>
+          <h5>
+            Post Id: <br />
+            {_id}
           </h5>
           <h5>
             Date created: <br />
