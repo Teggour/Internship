@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useInput } from "../../myHooks/useInput"
+import { useInput } from "../../myHooks/useInput";
 import style from "./form.module.css";
-import axios from "axios";
+import axios from "../../axios/axios";
 
-
-function AuthOrRegForm({ formType }) {
+function RegistrationForm() {
+  const name = useInput("", { isEmpty: true, minLength: 4, maxLength: 8 });
   const email = useInput("", { isEmpty: true, minLength: 4, isEmail: true });
   const password = useInput("", { isEmpty: true, minLength: 4, maxLength: 8 });
   const [message, setMessage] = useState("");
@@ -13,16 +13,29 @@ function AuthOrRegForm({ formType }) {
     e.preventDefault();
 
     axios
-      .post("https://nodejs-test-api-blog.herokuapp.com/api/v1/auth", {
+      .post("https://nodejs-test-api-blog.herokuapp.com/api/v1/users", {
         email: email.value,
         password: password.value,
+        name: name.value,
       })
       .then((response) => {
-        setMessage("Welcome!");
+        setMessage("Succes!");
         console.log(response.data.token);
       })
+      .then(() => {
+        axios
+          .post("https://nodejs-test-api-blog.herokuapp.com/api/v1/auth", {
+            email: email.value,
+            password: password.value,
+          })
+          .then((response) => {
+            setMessage("Welcome!");
+            console.log(response.data.token);
+            localStorage.setItem("jwtToken", response.data.token);
+          });
+      })
       .catch((error) => {
-        console.log(error.response.data.error);
+        console.warn(error.response.data.error);
         setMessage(error.response.data.error + "!");
       });
   };
@@ -30,9 +43,29 @@ function AuthOrRegForm({ formType }) {
   return (
     <React.Fragment>
       <form className={style.form}>
-        <h2>{formType}:</h2>
+        <h2>Registration:</h2>
 
         <div className={style.error}>{message}</div>
+
+        {name.isDirty && name.isEmpty && (
+          <div className={style.error}>Field can't is empty!</div>
+        )}
+        {name.isDirty && name.minLengthError && (
+          <div className={style.error}>Incorrect length... (Too short)!</div>
+        )}
+        {name.isDirty && name.maxLengthError && (
+          <div className={style.error}>Incorrect length... (Too long)!</div>
+        )}
+        <input
+          className={style.input}
+          type="text"
+          name="name"
+          placeholder="Enter name..."
+          value={name.value}
+          onChange={(e) => name.onChange(e)}
+          onBlur={(e) => name.onBlur(e)}
+          required
+        ></input>
 
         {email.isDirty && email.isEmpty && (
           <div className={style.error}>Field can't is empty!</div>
@@ -80,11 +113,11 @@ function AuthOrRegForm({ formType }) {
           disabled={!email.inputValid || !password.inputValid}
           onClick={clickBtn}
         >
-          Log In
+          Registration
         </button>
       </form>
     </React.Fragment>
   );
 }
 
-export default AuthOrRegForm;
+export default RegistrationForm;

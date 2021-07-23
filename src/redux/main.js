@@ -28,7 +28,7 @@ const changePostList = (newPostList) => {
   };
 };
 
-store.dispatch(changePostList([1, 2, 3, 4]));
-store.dispatch(changePostList([1, 2, 3, 4, 5, 6, 7]));
+// store.dispatch(changePostList([1, 2, 3, 4]));
+// store.dispatch(changePostList([1, 2, 3, 4, 5, 6, 7]));
 
 export default store;
