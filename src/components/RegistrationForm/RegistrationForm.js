@@ -13,7 +13,7 @@ function RegistrationForm() {
     e.preventDefault();
 
     axios
-      .post("https://nodejs-test-api-blog.herokuapp.com/api/v1/users", {
+      .post("/users", {
         email: email.value,
         password: password.value,
         name: name.value,
@@ -24,7 +24,7 @@ function RegistrationForm() {
       })
       .then(() => {
         axios
-          .post("https://nodejs-test-api-blog.herokuapp.com/api/v1/auth", {
+          .post("/auth", {
             email: email.value,
             password: password.value,
           })
