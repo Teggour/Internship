@@ -1,70 +1,46 @@
 import React, { useState, useEffect } from "react";
-import style from "./fullPost.module.css";
+import style from "./profile.module.css";
 import axios from "../../axios/axios";
-import img from "../../Images/default_img_for_blog.png";
+import img from "../../Images/default_img_for_avatar.png";
 
-function FullPost({ postId }) {
-  const [post, setPost] = useState({});
+function ProfileUser(props) {
+  const id = props.id;
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     axios
-      .get(`/posts/${postId}`)
+      .get(`/users/${id}`)
       .then((response) => {
-        setPost(response?.data);
+        setUserData(response.data);
       })
       .catch((error) => {
-        console.warn(error.response?.data.error);
+        console.warn(error.response.data.error);
       });
   }, []);
 
-  const {
-    dateCreated,
-    description,
-    fullText,
-    image,
-    likes,
-    postedBy,
-    title,
-    _id,
-  } = post;
+  const { email, name, dateCreated, avatar } = userData;
 
   return (
     <>
-      <div className={style.post}>
+      <div className={style.profile}>
         {/* <img src={image && img}/> */}
         <img
-          src={image}
+          src={avatar}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = img;
           }}
+          alt="Avatar"
         />
-        <h2>{title}</h2>
-        <p>{fullText}</p>
-        <div className={style.descr}>
-          <h5>
-            Author: <br /> {postedBy}
-          </h5>
-          <h5>
-            Post Id: <br />
-            {_id}
-          </h5>
-          <h5>
-            Likes: <br />
-            {likes?.length}
-          </h5>
-          <h5>
-            Post Id: <br />
-            {_id}
-          </h5>
-          <h5>
-            Date created: <br />
-            {dateCreated}
-          </h5>
-        </div>
+
+        <h5>Name: {name}</h5>
+        <h5>Email: {email}</h5>
+        <h5>Date created: {dateCreated}</h5>
+
+        <button>Update</button>
       </div>
     </>
   );
 }
 
-export default FullPost;
+export default ProfileUser;

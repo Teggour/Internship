@@ -38,6 +38,7 @@ function FullPost({ postId }) {
             e.target.onerror = null;
             e.target.src = img;
           }}
+          alt="IMG"
         />
         <h2>{title}</h2>
         <h5>({description})</h5>

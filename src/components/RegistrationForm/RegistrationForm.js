@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useInput } from "../../myHooks/useInput";
 import style from "./form.module.css";
 import axios from "../../axios/axios";
+import { useDispatch } from "react-redux";
+import {
+  setCurrentUserName,
+  setCurrentUserId,
+} from "../../reduxToolkit/toolkitSlice";
 
 function RegistrationForm() {
   const name = useInput("", { isEmpty: true, minLength: 4, maxLength: 8 });
   const email = useInput("", { isEmpty: true, minLength: 4, isEmail: true });
   const password = useInput("", { isEmpty: true, minLength: 4, maxLength: 8 });
   const [message, setMessage] = useState("");
+
+  const dispatch = useDispatch();
 
   const clickBtn = (e) => {
     e.preventDefault();
@@ -28,14 +35,13 @@ function RegistrationForm() {
             password: password.value,
           })
           .then((response) => {
-            setMessage("Welcome!");
             localStorage.setItem("jwtToken", response.data.token);
 
-            axios
-              .get("/auth/user")
-              .then((response) => {
-                console.log(response.data);
-              });
+            axios.get("/auth/user").then((response) => {
+              dispatch(setCurrentUserId(response.data._id));
+              dispatch(setCurrentUserName(response.data.name));
+              setMessage(`Welcome, ${response.data.name}!`);
+            });
           });
       })
       .catch((error) => {
