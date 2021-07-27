@@ -21,7 +21,6 @@ function Posts() {
       axios
         .get(`/posts?limit=${countPosts}&skip=${countPosts * currentPage}`)
         .then((response) => {
-          console.log(response);
           dispatch(getPosts([...posts, ...response.data]));
           dispatch(setCurrentPage(currentPage + 1));
         })

@@ -14,7 +14,7 @@ function ProfileUser(props) {
         setUserData(response.data);
       })
       .catch((error) => {
-        console.warn(error.response.data.error);
+        console.error(error.response);
       });
   }, []);
 
@@ -23,6 +23,7 @@ function ProfileUser(props) {
   return (
     <>
       <div className={style.profile}>
+        <h2>Profile:</h2>
         {/* <img src={image && img}/> */}
         <img
           src={avatar}
