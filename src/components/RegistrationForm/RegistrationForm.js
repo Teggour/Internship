@@ -38,6 +38,8 @@ function RegistrationForm() {
             localStorage.setItem("jwtToken", response.data.token);
 
             axios.get("/auth/user").then((response) => {
+              localStorage.setItem("userId", response.data._id);
+              localStorage.setItem("userName", response.data.name);
               dispatch(setCurrentUserId(response.data._id));
               dispatch(setCurrentUserName(response.data.name));
               setMessage(`Welcome, ${response.data.name}!`);
