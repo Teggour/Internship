@@ -13,15 +13,15 @@ function App() {
   return (
     <React.Fragment>
       <Header/>
-      {/* <PostForm postId="61001d8ae43fc000154aaca6" postTitle="check" postDescription="check1" postText="check2check2check2check2check2" /> */}
-      {/* <PostForm /> */}
-      {/* <AuthorizationForm /> */}
-      {/* <RegistrationForm /> */}
-      {/* <ProfileUser id="61014515ad547d001559209f"/> */}
-      {/* <FullPost postId="610017c6e43fc000154aaca5" />  */}
-      {/* <Posts /> */}
+      {/* <PostForm postId="61001d8ae43fc000154aaca6" postTitle="check" postDescription="check1" postText="check2check2check2check2check2" />
+      <PostForm />
+      <AuthorizationForm />
+      <RegistrationForm />
+      <ProfileUser id="61014515ad547d001559209f"/>
+      <FullPost postId="610017c6e43fc000154aaca5" /> 
+      <Posts /> */}
     </React.Fragment>
-  );
+  );  
 }
 
 export default App;

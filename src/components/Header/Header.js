@@ -7,29 +7,44 @@ import {
   Route,
   Link,
   NavLink,
+  Redirect,
 } from "react-router-dom";
 import Posts from "../Posts/Posts";
+import FullPost from "../FullPost/FullPost";
 import SignIn from "../AuthForm/AuthForm";
 import SignUp from "../RegistrationForm/RegistrationForm";
 
+import { ProtectedRoute } from "../../protectedRoutes/protectedRoute";
+import ProfileUser from "../ProfileUser/ProfileUser";
+
 function Header() {
+  const currentUser = useSelector((state) => state.toolkit.currentUserId);
+  // console.log(currentUser)
+
   return (
     <>
       <Router>
-        <div className={style.header}>
+        <header className={style.header}>
           <nav className={style.nav}>
             <Link to="/">Main page</Link>
-            <Link to="/blog">Blog</Link>
-            <Link to="/signin">Sign In</Link>
-            <Link to="/signup">Sign Up</Link>
+            {(!currentUser) ?
+            <>
+              <Link to="/signin">Sign In</Link> 
+              <Link to="/signup">Sign Up</Link>
+              </> 
+              :
+              <>
+                <Link to="/profile">Profile</Link>
+              </>
+              }
           </nav>
-        </div>
+        </header>
 
         <Switch>
           <Route exact path="/" component={Posts} />
-          <Route exact path="/blog" component={Posts} />
-          <Route exact path="/signin" component={SignIn} />
-          <Route exact path="/signup" component={SignUp} />
+          <ProtectedRoute exact path="/signin" component={SignIn} />
+          <ProtectedRoute exact path="/signup" component={SignUp} />
+          <Route exact path="/profile" component={ProfileUser} id={currentUser} />
         </Switch>
       </Router>
     </>
