@@ -31,7 +31,6 @@ function AuthForm() {
           localStorage.setItem("userName", response.data.name);
           dispatch(setCurrentUserId(response.data._id));
           dispatch(setCurrentUserName(response.data.name));
-          setMessage(`Welcome, ${response.data.name}!`);
         });
       })
       .catch((error) => {

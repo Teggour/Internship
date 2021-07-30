@@ -19,7 +19,18 @@
     justify-content: center;
 }
 
-.buttons > button {
+.buttons > .link > button, .buttons > button {
+    display: inline-block;
+    height: 70px;
+    width: 70px;
+    margin: 10px;
+}
+
+.buttons > .link > button > img, .buttons > button > img {
+    width: 100%;
+}
+
+/* .buttons > button {
     display: inline-block;
     height: 70px;
     width: 70px;
@@ -28,4 +39,4 @@
 
 .buttons > button > img {
     width: 100%;
-}
+} */

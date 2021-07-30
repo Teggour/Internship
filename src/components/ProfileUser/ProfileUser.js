@@ -2,15 +2,31 @@ import React, { useState, useEffect } from "react";
 import style from "./profile.module.css";
 import axios from "../../axios/axios";
 import avatarImg from "../../Images/default_img_for_avatar.png";
-import editImg from "../../Images/edit_img.png";
-import deleteImg from "../../Images/delete_img.png";
+import editImg from "../../Images/edit_img.svg";
+import deleteImg from "../../Images/delete_img.svg";
+import quitImg from "../../Images/quit_img.png";
+import { useDispatch } from "react-redux";
+import {
+  setCurrentUserName,
+  setCurrentUserId,
+} from "../../reduxToolkit/toolkitSlice";
+import { Link } from "react-router-dom";
 
 function ProfileUser(props) {
-  const id = props.id;
+  const id = props.match.params.id;
   const [userData, setUserData] = useState({});
+  const dispatch = useDispatch();
 
   const clickEditBtn = () => {
     console.log("edit");
+  };
+
+  const clickSignOutBtn = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("jwtToken");
+    dispatch(setCurrentUserId(null));
+    dispatch(setCurrentUserName(null));
   };
 
   const clickDeleteBtn = () => {
@@ -33,6 +49,7 @@ function ProfileUser(props) {
       .catch((error) => {
         console.error(error.response);
       });
+    return () => axios;
   }, []);
 
   const { email, name, dateCreated, avatar } = userData;
@@ -55,11 +72,16 @@ function ProfileUser(props) {
         <h5>Date created: {dateCreated}</h5>
 
         <div className={style.buttons}>
-          <button title="Edit" onClick={clickEditBtn}>
-            <img src={editImg} alt="Edit" />
-          </button>
+          <Link to={`${props.location.pathname}/edit`} className={style.link}>
+            <button title="Edit" onClick={clickEditBtn}>
+              <img src={editImg} alt="Edit" />
+            </button>
+          </Link>
           <button title="Delete" onClick={clickDeleteBtn}>
             <img src={deleteImg} alt="Delete" />
+          </button>
+          <button title="SignOut" onClick={clickSignOutBtn}>
+            <img src={quitImg} alt="SignOut" />
           </button>
         </div>
       </div>

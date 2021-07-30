@@ -2,13 +2,19 @@ import React, { useState, useEffect } from "react";
 import style from "./fullPost.module.css";
 import axios from "../../axios/axios";
 import img from "../../Images/default_img_for_blog.png";
-import editImg from "../../Images/edit_img.png";
-import deleteImg from "../../Images/delete_img.png";
-import { useSelector } from "react-redux";
+import editImg from "../../Images/edit_img.svg";
+import deleteImg from "../../Images/delete_img.svg";
+import { useSelector, useDispatch } from "react-redux";
+import { deletePost } from "../../reduxToolkit/toolkitSlice";
+import { Link } from "react-router-dom"
 
-function FullPost({ postId }) {
+function FullPost(props) {
   const [post, setPost] = useState({});
   const currentUserId = useSelector((state) => state.toolkit.currentUserId);
+  const allPosts = useSelector((state) => state.toolkit.posts);
+  const postId = props.match.params.id;
+
+  const dispatch = useDispatch();
 
   const clickEditBtn = () => {
     console.log("edit");
@@ -19,6 +25,7 @@ function FullPost({ postId }) {
       .delete(`posts/${postId}`)
       .then((response) => {
         console.log(response.data.message);
+        dispatch(deletePost(postId));
       })
       .catch((error) => {
         console.error(error.response.data.error);
@@ -81,9 +88,11 @@ function FullPost({ postId }) {
         </div>
         <div className={style.buttons}>
           {postedBy === currentUserId && (
-            <button title="Edit" onClick={clickEditBtn}>
-              <img src={editImg} alt="Edit" />
-            </button>
+            <Link to={`${props.location.pathname}/edit`} className={style.link}>
+              <button title="Edit" onClick={clickEditBtn}>
+                <img src={editImg} alt="Edit"/>
+              </button>
+            </Link>
           )}
           {postedBy === currentUserId && (
             <button title="Delete" onClick={clickDeleteBtn}>

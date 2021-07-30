@@ -13,6 +13,12 @@ const toolkitSlice = createSlice({
     getPosts(state, action) {
       state.posts = action.payload;
     },
+    deletePost(state, postId) {
+      state.posts = state.posts.filter(post => post._id !== postId.payload);
+    },
+    updatePost(state, postId) {
+      // state.posts = state.posts.map(post => post._id == postId.payload ?  : );
+    },
     setFetching(state, action) {
       state.fetching = action.payload;
     },
@@ -36,4 +42,6 @@ export const {
   setCurrentPage,
   setCurrentUserId,
   setCurrentUserName,
+  deletePost,
+  updatePost,
 } = toolkitSlice.actions;
