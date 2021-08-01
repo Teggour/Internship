@@ -2,27 +2,43 @@ import React, { useState } from "react";
 import { useInput } from "../../myHooks/useInput";
 import style from "./form.module.css";
 import axios from "../../axios/axios";
-import { useDispatch } from "react-redux";
+import {useEffect} from 'react'
 
-function PostForm({ postId, postTitle, postDescription, postText }) {
-  const title = useInput(postTitle || "", {
+function PostForm(props) {
+  const postId = props.match.params.postId;
+
+  const [message, setMessage] = useState("");
+  
+  useEffect(() => {
+    if (postId) {
+      axios
+      .get(`/posts/${postId}`)
+      .then((response) => {
+        title.changeValue(response.data.title);
+        description.changeValue(response.data.description);
+        fullText.changeValue(response.data.fullText);
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+    }
+  }, []);
+
+  const title = useInput("", {
     isEmpty: true,
     minLength: 5,
     maxLength: 36,
   });
-  const description = useInput(postDescription || "", {
+  const description = useInput("", {
     isEmpty: true,
     minLength: 5,
     maxLength: 36,
   });
-  const fullText = useInput(postText || "", {
+  const fullText = useInput("", {
     isEmpty: true,
     minLength: 20,
     maxLength: 54,
   });
-  const [message, setMessage] = useState("");
-
-  const dispatch = useDispatch();
 
   const clickBtn = (e) => {
     e.preventDefault();
@@ -64,7 +80,7 @@ function PostForm({ postId, postTitle, postDescription, postText }) {
     <React.Fragment>
       <form className={style.form}>
         <h2>
-          {(postTitle && postDescription && postText && "Update post:") ||
+          {(postId && "Update post:") ||
             "Create post:"}
         </h2>
 
@@ -138,10 +154,10 @@ function PostForm({ postId, postTitle, postDescription, postText }) {
           }
           onClick={clickBtn}
           value={
-            (postTitle && postDescription && postText && "Update") || "Create"
+            (postId && "Update") || "Create"
           }
         >
-          {(postTitle && postDescription && postText && "Update") || "Create"}
+          {(postId && "Update") || "Create"}
         </button>
       </form>
     </React.Fragment>

@@ -10,9 +10,9 @@ export const useInput = (initialValue, validations) => {
     setValue(e.target.value);
   };
   
-  // const customChange = (newValue) => {
-  //   setValue(newValue);
-  // };
+  const changeValue = (newValue) => {
+    setValue(newValue);
+  };
 
   const onBlur = (e) => {
     setDirty(true);
@@ -23,7 +23,7 @@ export const useInput = (initialValue, validations) => {
     isDirty,
     onChange,
     onBlur,
-    // customChange,
+    changeValue,
     ...valid,
   };
 };

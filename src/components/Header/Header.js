@@ -45,11 +45,10 @@ function Header() {
           <Route exact path="/" component={Posts} />
           <UnAuthRoute exact path="/signin" component={SignIn} />
           <UnAuthRoute exact path="/signup" component={SignUp} />
-          <AuthRoute exact path="/profile/:id" component={ProfileUser} />
-          <AuthRoute exact path="/profile/:id" component={ProfileUser} />
+          <AuthRoute exact path="/profile/:userId" component={ProfileUser} />
           <AuthRoute exact path="/addpost" component={PostForm} />
-          <Route exact path="/post/:id" component={FullPost} />
-          <Route exact path="/post/:id/edit" component={PostForm} /> /* check route for author */
+          <Route exact path="/post/:postId" component={FullPost} />
+          <Route exact path="/post/:postId/edit" component={PostForm} />
         </Switch>
       </Router>
     </>

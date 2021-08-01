@@ -16,6 +16,9 @@ const toolkitSlice = createSlice({
     deletePost(state, postId) {
       state.posts = state.posts.filter(post => post._id !== postId.payload);
     },
+    // addPost(state, post) {
+    //   state.posts.push(post.payload);
+    // },
     updatePost(state, postId) {
       // state.posts = state.posts.map(post => post._id == postId.payload ?  : );
     },
@@ -44,4 +47,5 @@ export const {
   setCurrentUserName,
   deletePost,
   updatePost,
+  // addPost,
 } = toolkitSlice.actions;

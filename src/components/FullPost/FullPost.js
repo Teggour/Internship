@@ -11,8 +11,7 @@ import { Link } from "react-router-dom"
 function FullPost(props) {
   const [post, setPost] = useState({});
   const currentUserId = useSelector((state) => state.toolkit.currentUserId);
-  const allPosts = useSelector((state) => state.toolkit.posts);
-  const postId = props.match.params.id;
+  const postId = props.match.params.postId;
 
   const dispatch = useDispatch();
 
@@ -39,7 +38,7 @@ function FullPost(props) {
         setPost(response.data);
       })
       .catch((error) => {
-        console.warn(error.response.data.error);
+        console.warn(error);
       });
   }, []);
 

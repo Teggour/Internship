@@ -13,7 +13,7 @@ import {
 import { Link } from "react-router-dom";
 
 function ProfileUser(props) {
-  const id = props.match.params.id;
+  const id = props.match.params.userId;
   const [userData, setUserData] = useState({});
   const dispatch = useDispatch();
 
