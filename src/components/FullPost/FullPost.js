@@ -56,7 +56,6 @@ function FullPost(props) {
   return (
     <>
       <div className={style.post}>
-        {/* <img src={image && img}/> */}
         <img
           src={image ? image : img}
           onError={(e) => {

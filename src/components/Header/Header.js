@@ -15,6 +15,7 @@ import SignUp from "../RegistrationForm/RegistrationForm";
 
 import { UnAuthRoute } from "../../protectedRoutes/unAuthRoute";
 import { AuthRoute } from "../../protectedRoutes/authRoute";
+import UpdateProfileUser from "../UpdateProfileUser/UpdateProfileUser";
 import ProfileUser from "../ProfileUser/ProfileUser";
 import PostForm from "../PostForm/PostForm";
 
@@ -46,6 +47,7 @@ function Header() {
           <UnAuthRoute exact path="/signin" component={SignIn} />
           <UnAuthRoute exact path="/signup" component={SignUp} />
           <AuthRoute exact path="/profile/:userId" component={ProfileUser} />
+          <AuthRoute exact path="/profile/:userId/edit" component={UpdateProfileUser} />
           <AuthRoute exact path="/addpost" component={PostForm} />
           <Route exact path="/post/:postId" component={FullPost} />
           <Route exact path="/post/:postId/edit" component={PostForm} />

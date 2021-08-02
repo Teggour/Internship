@@ -2,25 +2,29 @@ import React, { useState } from "react";
 import { useInput } from "../../myHooks/useInput";
 import style from "./form.module.css";
 import axios from "../../axios/axios";
-import {useEffect} from 'react'
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { updatePost } from "../../reduxToolkit/toolkitSlice"
 
 function PostForm(props) {
   const postId = props.match.params.postId;
 
+  const dispatch = useDispatch();
+
   const [message, setMessage] = useState("");
-  
+
   useEffect(() => {
     if (postId) {
       axios
-      .get(`/posts/${postId}`)
-      .then((response) => {
-        title.changeValue(response.data.title);
-        description.changeValue(response.data.description);
-        fullText.changeValue(response.data.fullText);
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
+        .get(`/posts/${postId}`)
+        .then((response) => {
+          title.changeValue(response.data.title);
+          description.changeValue(response.data.description);
+          fullText.changeValue(response.data.fullText);
+        })
+        .catch((error) => {
+          console.warn(error);
+        });
     }
   }, []);
 
@@ -68,6 +72,8 @@ function PostForm(props) {
         })
         .then((response) => {
           setMessage("Succes updated!");
+
+          dispatch(updatePost({id: postId, newPost: response.data}))
         })
         .catch((error) => {
           console.error(error.response.data.error);
@@ -79,10 +85,7 @@ function PostForm(props) {
   return (
     <React.Fragment>
       <form className={style.form}>
-        <h2>
-          {(postId && "Update post:") ||
-            "Create post:"}
-        </h2>
+        <h2>{(postId && "Update post:") || "Create post:"}</h2>
 
         <div className={style.error}>{message}</div>
 
@@ -153,9 +156,7 @@ function PostForm(props) {
             !title.inputValid || !description.inputValid || !fullText.inputValid
           }
           onClick={clickBtn}
-          value={
-            (postId && "Update") || "Create"
-          }
+          value={(postId && "Update") || "Create"}
         >
           {(postId && "Update") || "Create"}
         </button>

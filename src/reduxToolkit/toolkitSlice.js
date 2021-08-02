@@ -7,20 +7,19 @@ const toolkitSlice = createSlice({
     fetching: true,
     currentPage: 0,
     currentUserId: localStorage.getItem("userId") || null,
-    currentUserName: localStorage.getItem("userName") || null,
+    currentUserName: localStorage.getItem("userName") || "",
   },
   reducers: {
     getPosts(state, action) {
       state.posts = action.payload;
     },
-    deletePost(state, postId) {
-      state.posts = state.posts.filter(post => post._id !== postId.payload);
+    deletePost(state, action) {
+      state.posts = state.posts.filter((post) => post._id !== action.payload);
     },
-    // addPost(state, post) {
-    //   state.posts.push(post.payload);
-    // },
-    updatePost(state, postId) {
-      // state.posts = state.posts.map(post => post._id == postId.payload ?  : );
+    updatePost(state, action) {
+      state.posts = state.posts.map((post) => {
+        return post._id == action.payload.id ? action.payload.newPost : post;
+      });
     },
     setFetching(state, action) {
       state.fetching = action.payload;
@@ -47,5 +46,4 @@ export const {
   setCurrentUserName,
   deletePost,
   updatePost,
-  // addPost,
 } = toolkitSlice.actions;
