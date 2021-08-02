@@ -4,12 +4,15 @@ import axios from "../../axios/axios";
 import img from "../../Images/default_img_for_blog.png";
 import editImg from "../../Images/edit_img.svg";
 import deleteImg from "../../Images/delete_img.svg";
+import likeImg from "../../Images/like_img.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { deletePost } from "../../reduxToolkit/toolkitSlice";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 function FullPost(props) {
   const [post, setPost] = useState({});
+  const [postLikes, setPostLikes] = useState([]);
+  const [onButtonClick, setOnButtonClick] = useState(false);
   const currentUserId = useSelector((state) => state.toolkit.currentUserId);
   const postId = props.match.params.postId;
 
@@ -19,9 +22,24 @@ function FullPost(props) {
     console.log("edit");
   };
 
+  const clickLikeBtn = () => {
+    setOnButtonClick(true);
+    console.log("like");
+    axios
+      .put(`/posts/like/${postId}`)
+      .then((response) => {
+        // console.log(response.data.message)
+        // postLikes.includes(currentUserId) ? 1 : 2
+        setOnButtonClick(false);
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+  };
+
   const clickDeleteBtn = () => {
     axios
-      .delete(`posts/${postId}`)
+      .delete(`/posts/${postId}`)
       .then((response) => {
         console.log(response.data.message);
         dispatch(deletePost(postId));
@@ -36,6 +54,7 @@ function FullPost(props) {
       .get(`/posts/${postId}`)
       .then((response) => {
         setPost(response.data);
+        setPostLikes(response.data.likes);
       })
       .catch((error) => {
         console.warn(error);
@@ -62,25 +81,26 @@ function FullPost(props) {
             e.target.onerror = null;
             e.target.src = img;
           }}
-          alt="IMG"
+          alt="post_img"
         />
         <h2>{title}</h2>
         <h5>({description})</h5>
         <p>{fullText}</p>
         <div className={style.descr}>
+          <h5>Author: &nbsp; {postedBy}</h5>
+          <h5>Post Id: &nbsp; {_id}</h5>
           <h5>
-            Author: <br /> {postedBy}
+            <button
+              title="Like"
+              onClick={clickLikeBtn}
+              disabled={onButtonClick}
+            >
+              <img src={likeImg} alt="like_img" />
+            </button>
+            : &nbsp; {postLikes.length}
           </h5>
           <h5>
-            Post Id: <br />
-            {_id}
-          </h5>
-          <h5>
-            Likes: <br />
-            {likes?.length}
-          </h5>
-          <h5>
-            Date created: <br />
+            Date created: &nbsp;
             {dateCreated}
           </h5>
         </div>
@@ -88,7 +108,7 @@ function FullPost(props) {
           {postedBy === currentUserId && (
             <Link to={`${props.location.pathname}/edit`} className={style.link}>
               <button title="Edit" onClick={clickEditBtn}>
-                <img src={editImg} alt="Edit"/>
+                <img src={editImg} alt="Edit" />
               </button>
             </Link>
           )}

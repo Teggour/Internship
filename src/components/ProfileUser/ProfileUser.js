@@ -25,6 +25,7 @@ function ProfileUser(props) {
     localStorage.removeItem("userId");
     localStorage.removeItem("userName");
     localStorage.removeItem("jwtToken");
+    
     dispatch(setCurrentUserId(null));
     dispatch(setCurrentUserName(null));
   };

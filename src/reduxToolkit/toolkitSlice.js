@@ -18,7 +18,7 @@ const toolkitSlice = createSlice({
     },
     updatePost(state, action) {
       state.posts = state.posts.map((post) => {
-        return post._id == action.payload.id ? action.payload.newPost : post;
+        return post._id === action.payload.id ? action.payload.newPost : post;
       });
     },
     setFetching(state, action) {
