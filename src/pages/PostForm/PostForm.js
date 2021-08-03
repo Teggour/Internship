@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useInput } from "../../myHooks/useInput";
 import style from "./form.module.css";
-import axios from "../../axios/axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { updatePost } from "../../reduxToolkit/toolkitSlice"
+import { updatePost } from "../../reduxToolkit/toolkitSlice";
+import CreatePostAPI from "../../api/CreatePostAPI";
+import UpdatePostAPI from "../../api/UpdatePostAPI";
+import GetPostForInitial from "../../api/GetPostForInintialAPI";
 
 function PostForm(props) {
   const postId = props.match.params.postId;
@@ -15,17 +17,9 @@ function PostForm(props) {
 
   useEffect(() => {
     if (postId) {
-      axios
-        .get(`/posts/${postId}`)
-        .then((response) => {
-          title.changeValue(response.data.title);
-          description.changeValue(response.data.description);
-          fullText.changeValue(response.data.fullText);
-        })
-        .catch((error) => {
-          console.warn(error);
-        });
+      GetPostForInitial(postId, title, description, fullText);
     }
+    // eslint-disable-next-line
   }, []);
 
   const title = useInput("", {
@@ -48,37 +42,19 @@ function PostForm(props) {
     e.preventDefault();
 
     if (e.target.value === "Create") {
-      axios
-        .post("/posts", {
-          title: title.value,
-          description: description.value,
-          fullText: fullText.value,
-        })
-        .then((response) => {
-          setMessage("Succes created!");
-        })
-        .catch((error) => {
-          console.error(error.response.data.error);
-          setMessage(error.response.data.error + "!");
-        });
+      CreatePostAPI(title, description, fullText, setMessage);
     }
 
     if (e.target.value === "Update") {
-      axios
-        .patch(`/posts/${postId}`, {
-          title: title.value,
-          description: description.value,
-          fullText: fullText.value,
-        })
-        .then((response) => {
-          setMessage("Succes updated!");
-
-          dispatch(updatePost({id: postId, newPost: response.data}))
-        })
-        .catch((error) => {
-          console.error(error.response.data.error);
-          setMessage(error.response.data.error + "!");
-        });
+      UpdatePostAPI(
+        postId,
+        title,
+        description,
+        fullText,
+        setMessage,
+        dispatch,
+        updatePost
+      );
     }
   };
 

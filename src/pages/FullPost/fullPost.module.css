@@ -53,8 +53,13 @@
 }
 
 .buttons > .link > button, .buttons > button {
-    display: inline-block;
+    display: block;
     height: 70px;
     width: 70px;
     margin: 10px;
+}
+
+.buttons > .link > button > img, .buttons > button > img {
+    width: 100%;
+    height: 100%;
 }

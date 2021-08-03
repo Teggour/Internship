@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { useInput } from "../../myHooks/useInput";
 import style from "./form.module.css";
-import axios from "../../axios/axios";
 import { useDispatch } from "react-redux";
-import {
-  setCurrentUserName,
-  setCurrentUserId,
-} from "../../reduxToolkit/toolkitSlice";
+import AuthAPI from "../../api/AuthAPI";
 
 function AuthForm() {
   const email = useInput("", { isEmpty: true, minLength: 4, isEmail: true });
@@ -18,25 +14,7 @@ function AuthForm() {
   const clickBtn = (e) => {
     e.preventDefault();
 
-    axios
-      .post("/auth", {
-        email: email.value,
-        password: password.value,
-      })
-      .then((response) => {
-        localStorage.setItem("jwtToken", response.data.token);
-
-        axios.get("/auth/user").then((response) => {
-          localStorage.setItem("userId", response.data._id);
-          localStorage.setItem("userName", response.data.name);
-          dispatch(setCurrentUserId(response.data._id));
-          dispatch(setCurrentUserName(response.data.name));
-        });
-      })
-      .catch((error) => {
-        console.error(error.response.data.error);
-        setMessage(error.response.data.error + "!");
-      });
+    AuthAPI(email, password, setMessage, dispatch);
   };
 
   return (

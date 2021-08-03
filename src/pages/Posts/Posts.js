@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Post from "../Post/Post";
-import axios from "../../axios/axios";
 import style from "./posts.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,6 +7,7 @@ import {
   setCurrentPage,
   setFetching,
 } from "../../reduxToolkit/toolkitSlice";
+import GetPostsAPI from "../../api/GetPostsAPI";
 
 function Posts() {
   const posts = useSelector((state) => state.toolkit.posts);
@@ -18,23 +18,24 @@ function Posts() {
 
   useEffect(() => {
     if (fetching) {
-      axios
-        .get(`/posts?limit=${countPosts}&skip=${countPosts * currentPage}`)
-        .then((response) => {
-          dispatch(getPosts([...posts, ...response.data]));
-          dispatch(setCurrentPage(currentPage + 1));
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => dispatch(setFetching(false)));
+      GetPostsAPI(
+        posts,
+        countPosts,
+        currentPage,
+        dispatch,
+        getPosts,
+        setCurrentPage,
+        setFetching
+      );
     }
+    // eslint-disable-next-line
   }, [fetching]);
 
   useEffect(() => {
     document.addEventListener("scroll", scrollHandler);
 
     return () => document.removeEventListener("scroll", scrollHandler);
+    // eslint-disable-next-line
   }, []);
 
   const scrollHandler = (e) => {

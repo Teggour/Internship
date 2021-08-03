@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 export const UnAuthRoute = ({ component: Component, ...rest }) => {
   const currentUser = useSelector((state) => state.toolkit.currentUserId);
-  
+
   return (
     <Route
       {...rest}

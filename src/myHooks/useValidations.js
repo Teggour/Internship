@@ -34,6 +34,7 @@ export const useValidation = (value, validations) => {
           break;
       }
     }
+    // eslint-disable-next-line
   }, [value]);
 
   useEffect(() => {

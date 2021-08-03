@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 export const AuthRoute = ({ component: Component, ...rest }) => {
   const currentUser = useSelector((state) => state.toolkit.currentUserId);
-  
+
   return (
     <Route
       {...rest}

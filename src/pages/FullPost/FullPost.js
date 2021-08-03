@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import style from "./fullPost.module.css";
-import axios from "../../axios/axios";
 import img from "../../Images/default_img_for_blog.png";
 import editImg from "../../Images/edit_img.svg";
 import deleteImg from "../../Images/delete_img.svg";
 import { useSelector, useDispatch } from "react-redux";
-import { deletePost } from "../../reduxToolkit/toolkitSlice";
 import { Link } from "react-router-dom";
 import Like from "../../components/Like/Like";
+import GetPostById from "../../api/GetPostByIdAPI";
+import DeletePostAPI from "../../api/DeletePostApi";
+import LikeAPI from "../../api/LikeAPI";
 
 function FullPost(props) {
   const [post, setPost] = useState({});
@@ -18,65 +19,25 @@ function FullPost(props) {
 
   const dispatch = useDispatch();
 
-  const clickEditBtn = () => {
-    console.log("edit");
-  };
-
   const clickLike = () => {
     if (!onButtonClick) {
       setOnButtonClick(true);
-      console.log("like");
-      axios
-        .put(`/posts/like/${postId}`)
-        .then((response) => {
-          console.log(response.data.message);
-          const newLikes = postLikes.includes(currentUserId)
-            ? postLikes.filter((userId) => userId !== currentUserId)
-            : [...postLikes, currentUserId];
 
-          setPostLikes(newLikes);
-          setOnButtonClick(false);
-        })
-        .catch((error) => {
-          console.warn(error);
-        });
+      LikeAPI(postId, postLikes, currentUserId, setPostLikes, setOnButtonClick);
     }
   };
 
   const clickDeleteBtn = () => {
-    axios
-      .delete(`/posts/${postId}`)
-      .then((response) => {
-        console.log(response.data.message);
-        dispatch(deletePost(postId));
-      })
-      .catch((error) => {
-        console.error(error.response.data.error);
-      });
+    DeletePostAPI(postId, dispatch);
   };
 
   useEffect(() => {
-    axios
-      .get(`/posts/${postId}`)
-      .then((response) => {
-        setPost(response.data);
-        setPostLikes(response.data.likes);
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
+    GetPostById(postId, setPost, setPostLikes);
+    // eslint-disable-next-line
   }, []);
 
-  const {
-    dateCreated,
-    description,
-    fullText,
-    image,
-    likes,
-    postedBy,
-    title,
-    _id,
-  } = post;
+  const { dateCreated, description, fullText, image, postedBy, title, _id } =
+    post;
 
   return (
     <>
@@ -96,11 +57,6 @@ function FullPost(props) {
           <h5>Author: &nbsp; {postedBy}</h5>
           <h5>Post Id: &nbsp; {_id}</h5>
           <h5>
-            {/* <img
-              src={likeImg}
-              alt="like_img"
-              onClick={clickLike}
-            /> */}
             <div onClick={clickLike}>
               <Like
                 newfill={postLikes?.includes(currentUserId) ? "red" : "white"}
@@ -116,7 +72,7 @@ function FullPost(props) {
         <div className={style.buttons}>
           {postedBy === currentUserId && (
             <Link to={`${props.location.pathname}/edit`} className={style.link}>
-              <button title="Edit" onClick={clickEditBtn}>
+              <button title="Edit">
                 <img src={editImg} alt="Edit" />
               </button>
             </Link>

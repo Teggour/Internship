@@ -9,7 +9,7 @@ export const useInput = (initialValue, validations) => {
   const onChange = (e) => {
     setValue(e.target.value);
   };
-  
+
   const changeValue = (newValue) => {
     setValue(newValue);
   };

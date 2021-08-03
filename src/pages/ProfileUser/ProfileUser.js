@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import style from "./profile.module.css";
-import axios from "../../axios/axios";
 import avatarImg from "../../Images/default_img_for_avatar.png";
 import editImg from "../../Images/edit_img.svg";
 import deleteImg from "../../Images/delete_img.svg";
@@ -11,6 +10,8 @@ import {
   setCurrentUserId,
 } from "../../reduxToolkit/toolkitSlice";
 import { Link } from "react-router-dom";
+import DeleteUserApi from "../../api/DeleteUserAPI";
+import GetUserAPI from "../../api/GetUserAPI";
 
 function ProfileUser(props) {
   const id = props.match.params.userId;
@@ -25,32 +26,18 @@ function ProfileUser(props) {
     localStorage.removeItem("userId");
     localStorage.removeItem("userName");
     localStorage.removeItem("jwtToken");
-    
+
     dispatch(setCurrentUserId(null));
     dispatch(setCurrentUserName(null));
   };
 
   const clickDeleteBtn = () => {
-    axios
-      .delete(`users/${id}`)
-      .then((response) => {
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        console.error(error.response.data.error);
-      });
+    DeleteUserApi(id);
   };
 
   useEffect(() => {
-    axios
-      .get(`/users/${id}`)
-      .then((response) => {
-        setUserData(response.data);
-      })
-      .catch((error) => {
-        console.error(error.response);
-      });
-    return () => axios;
+    GetUserAPI(id, setUserData);
+    // eslint-disable-next-line
   }, []);
 
   const { email, name, dateCreated, avatar } = userData;

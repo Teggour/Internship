@@ -1,13 +1,7 @@
 import React from "react";
 import style from "./header.module.css";
 import { useSelector } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Posts from "../Posts/Posts";
 import FullPost from "../FullPost/FullPost";
 import SignIn from "../AuthForm/AuthForm";
@@ -47,7 +41,11 @@ function Header() {
           <UnAuthRoute exact path="/signin" component={SignIn} />
           <UnAuthRoute exact path="/signup" component={SignUp} />
           <AuthRoute exact path="/profile/:userId" component={ProfileUser} />
-          <AuthRoute exact path="/profile/:userId/edit" component={UpdateProfileUser} />
+          <AuthRoute
+            exact
+            path="/profile/:userId/edit"
+            component={UpdateProfileUser}
+          />
           <AuthRoute exact path="/addpost" component={PostForm} />
           <Route exact path="/post/:postId" component={FullPost} />
           <Route exact path="/post/:postId/edit" component={PostForm} />
