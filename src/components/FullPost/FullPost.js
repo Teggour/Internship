@@ -4,13 +4,14 @@ import axios from "../../axios/axios";
 import img from "../../Images/default_img_for_blog.png";
 import editImg from "../../Images/edit_img.svg";
 import deleteImg from "../../Images/delete_img.svg";
-import likeImg from "../../Images/like_img.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { deletePost } from "../../reduxToolkit/toolkitSlice";
 import { Link } from "react-router-dom";
+import Like from "../Like/Like";
 
 function FullPost(props) {
   const [post, setPost] = useState({});
+  const [color, setColor] = useState("");
   const [postLikes, setPostLikes] = useState([]);
   const [onButtonClick, setOnButtonClick] = useState(false);
   const currentUserId = useSelector((state) => state.toolkit.currentUserId);
@@ -22,7 +23,7 @@ function FullPost(props) {
     console.log("edit");
   };
 
-  const clickLikeBtn = () => {
+  const clickLike = () => {
     setOnButtonClick(true);
     console.log("like");
     axios
@@ -59,6 +60,7 @@ function FullPost(props) {
       .then((response) => {
         setPost(response.data);
         setPostLikes(response.data.likes);
+        // postLikes.includes(currentUserId) ? setColor("red") : setColor("black")
       })
       .catch((error) => {
         console.warn(error);
@@ -94,13 +96,15 @@ function FullPost(props) {
           <h5>Author: &nbsp; {postedBy}</h5>
           <h5>Post Id: &nbsp; {_id}</h5>
           <h5>
-            <button
-              title="Like"
-              onClick={clickLikeBtn}
-              disabled={onButtonClick}
-            >
-              <img src={likeImg} alt="like_img" />
-            </button>
+            {/* <img
+              src={likeImg}
+              alt="like_img"
+              onClick={clickLike}
+            /> */}
+            <Like
+              newfill={postLikes?.includes(currentUserId) ? "red" : "white"}
+              onClick={clickLike}
+            />
             : &nbsp; {postLikes.length}
           </h5>
           <h5>
