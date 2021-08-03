@@ -28,8 +28,12 @@ function FullPost(props) {
     axios
       .put(`/posts/like/${postId}`)
       .then((response) => {
-        // console.log(response.data.message)
-        // postLikes.includes(currentUserId) ? 1 : 2
+        console.log(response.data.message);
+        const newLikes = postLikes.includes(currentUserId)
+          ? postLikes.filter((userId) => userId !== currentUserId)
+          : [...postLikes, currentUserId];
+
+        setPostLikes(newLikes);
         setOnButtonClick(false);
       })
       .catch((error) => {
