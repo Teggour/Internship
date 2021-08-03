@@ -7,11 +7,10 @@ import deleteImg from "../../Images/delete_img.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { deletePost } from "../../reduxToolkit/toolkitSlice";
 import { Link } from "react-router-dom";
-import Like from "../Like/Like";
+import Like from "../../components/Like/Like";
 
 function FullPost(props) {
   const [post, setPost] = useState({});
-  const [color, setColor] = useState("");
   const [postLikes, setPostLikes] = useState([]);
   const [onButtonClick, setOnButtonClick] = useState(false);
   const currentUserId = useSelector((state) => state.toolkit.currentUserId);
@@ -24,22 +23,24 @@ function FullPost(props) {
   };
 
   const clickLike = () => {
-    setOnButtonClick(true);
-    console.log("like");
-    axios
-      .put(`/posts/like/${postId}`)
-      .then((response) => {
-        console.log(response.data.message);
-        const newLikes = postLikes.includes(currentUserId)
-          ? postLikes.filter((userId) => userId !== currentUserId)
-          : [...postLikes, currentUserId];
+    if (!onButtonClick) {
+      setOnButtonClick(true);
+      console.log("like");
+      axios
+        .put(`/posts/like/${postId}`)
+        .then((response) => {
+          console.log(response.data.message);
+          const newLikes = postLikes.includes(currentUserId)
+            ? postLikes.filter((userId) => userId !== currentUserId)
+            : [...postLikes, currentUserId];
 
-        setPostLikes(newLikes);
-        setOnButtonClick(false);
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
+          setPostLikes(newLikes);
+          setOnButtonClick(false);
+        })
+        .catch((error) => {
+          console.warn(error);
+        });
+    }
   };
 
   const clickDeleteBtn = () => {
@@ -60,7 +61,6 @@ function FullPost(props) {
       .then((response) => {
         setPost(response.data);
         setPostLikes(response.data.likes);
-        // postLikes.includes(currentUserId) ? setColor("red") : setColor("black")
       })
       .catch((error) => {
         console.warn(error);
@@ -101,10 +101,11 @@ function FullPost(props) {
               alt="like_img"
               onClick={clickLike}
             /> */}
-            <Like
-              newfill={postLikes?.includes(currentUserId) ? "red" : "white"}
-              onClick={clickLike}
-            />
+            <div onClick={clickLike}>
+              <Like
+                newfill={postLikes?.includes(currentUserId) ? "red" : "white"}
+              />
+            </div>
             : &nbsp; {postLikes.length}
           </h5>
           <h5>

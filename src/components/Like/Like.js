@@ -1,9 +1,9 @@
 import React from "react";
 import style from "./like.module.css";
 
-function Like({ newfill, onClick }) {
+function Like({ newfill }) {
   return (
-    <svg viewBox="0 0 391.837 391.837" className={style.svg} onClick={onClick}>
+    <svg viewBox="0 0 391.837 391.837" className={style.svg}>
       <path
         className={style.path}
         style={{ fill: newfill, stroke: "black", strokeWidth: "10px", margin: "10px"}}
