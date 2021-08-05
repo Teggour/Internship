@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useInput } from "../../myHooks/useInput";
 import { useDispatch } from "react-redux";
 import RegistrationAPI from "../../api/RegistrationAPI";
-import {MainForm, FormTitle, FormInput, FormButton, FormErrorMessage} from "../../StyleComponents/StyledForm"
+import { FormErrorMessage } from "../../StyleComponents/StyledForm";
+
+import Input from "../../components/InputForForm/InputForForm";
+import Button from "../../components/ButtonForForm/ButtonForForm";
+import Title from "../../components/TitleForForm/TitleForForm";
+import Form from "../../components/Form/Form";
 
 function RegistrationForm() {
   const name = useInput("", { isEmpty: true, minLength: 4, maxLength: 8 });
@@ -18,7 +23,14 @@ function RegistrationForm() {
 
     if (!onButtonClick) {
       setOnButtonClick(true);
-      RegistrationAPI(dispatch, email, password, name, setMessage, setOnButtonClick);
+      RegistrationAPI(
+        dispatch,
+        email,
+        password,
+        name,
+        setMessage,
+        setOnButtonClick
+      );
     }
   };
 
@@ -28,8 +40,8 @@ function RegistrationForm() {
 
   return (
     <React.Fragment>
-      <MainForm>
-        <FormTitle>Registration:</FormTitle>
+      <Form>
+        <Title>Registration:</Title>
 
         <FormErrorMessage>{message}</FormErrorMessage>
 
@@ -42,7 +54,7 @@ function RegistrationForm() {
         {name.isDirty && name.maxLengthError && (
           <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <FormInput
+        <Input
           type="text"
           name="name"
           placeholder="Enter name..."
@@ -50,7 +62,7 @@ function RegistrationForm() {
           onChange={(e) => name.onChange(e)}
           onBlur={(e) => name.onBlur(e)}
           required
-        ></FormInput>
+        ></Input>
 
         {email.isDirty && email.isEmpty && (
           <FormErrorMessage>Field can't is empty!</FormErrorMessage>
@@ -61,7 +73,7 @@ function RegistrationForm() {
         {email.isDirty && email.emailError && (
           <FormErrorMessage>Incorrect email!</FormErrorMessage>
         )}
-        <FormInput
+        <Input
           type="text"
           name="email"
           placeholder="Enter email..."
@@ -69,7 +81,7 @@ function RegistrationForm() {
           onChange={(e) => email.onChange(e)}
           onBlur={(e) => email.onBlur(e)}
           required
-        ></FormInput>
+        ></Input>
 
         {password.isDirty && password.isEmpty && (
           <FormErrorMessage>Field can't is empty!</FormErrorMessage>
@@ -80,7 +92,7 @@ function RegistrationForm() {
         {password.isDirty && password.maxLengthError && (
           <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <FormInput
+        <Input
           type="password"
           name="password"
           placeholder="Enter password..."
@@ -88,16 +100,16 @@ function RegistrationForm() {
           onChange={(e) => password.onChange(e)}
           onBlur={(e) => password.onBlur(e)}
           required
-        ></FormInput>
+        ></Input>
 
-        <FormButton
+        <Button
           type="submit"
           disabled={!email.inputValid || !password.inputValid}
           onClick={clickBtn}
         >
           Registration
-        </FormButton>
-      </MainForm>
+        </Button>
+      </Form>
     </React.Fragment>
   );
 }

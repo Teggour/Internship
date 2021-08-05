@@ -3,13 +3,12 @@ import { useInput } from "../../myHooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUserName } from "../../reduxToolkit/toolkitSlice";
 import UpdateUserAPI from "../../api/UpdateUserAPI";
-import {
-  MainForm,
-  FormTitle,
-  FormInput,
-  FormButton,
-  FormErrorMessage,
-} from "../../StyleComponents/StyledForm";
+import { FormErrorMessage } from "../../StyleComponents/StyledForm";
+
+import Input from "../../components/InputForForm/InputForForm";
+import Button from "../../components/ButtonForForm/ButtonForForm";
+import Title from "../../components/TitleForForm/TitleForForm";
+import Form from "../../components/Form/Form";
 
 function UpdateProfileUser(props) {
   const id = props.match.params.userId;
@@ -32,8 +31,8 @@ function UpdateProfileUser(props) {
 
   return (
     <React.Fragment>
-      <MainForm>
-        <FormTitle>Update username:</FormTitle>
+      <Form>
+        <Title>Update username:</Title>
 
         <FormErrorMessage>{message}</FormErrorMessage>
 
@@ -46,7 +45,7 @@ function UpdateProfileUser(props) {
         {name.isDirty && name.emailError && (
           <FormErrorMessage>Incorrect email!</FormErrorMessage>
         )}
-        <FormInput
+        <Input
           type="text"
           name="name"
           placeholder="Enter name..."
@@ -54,16 +53,12 @@ function UpdateProfileUser(props) {
           onChange={(e) => name.onChange(e)}
           onBlur={(e) => name.onBlur(e)}
           required
-        ></FormInput>
+        ></Input>
 
-        <FormButton
-          type="submit"
-          disabled={!name.inputValid}
-          onClick={clickBtn}
-        >
+        <Button type="submit" disabled={!name.inputValid} onClick={clickBtn}>
           Update
-        </FormButton>
-      </MainForm>
+        </Button>
+      </Form>
     </React.Fragment>
   );
 }

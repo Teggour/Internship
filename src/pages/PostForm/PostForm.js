@@ -5,13 +5,12 @@ import { updatePost } from "../../reduxToolkit/toolkitSlice";
 import CreatePostAPI from "../../api/CreatePostAPI";
 import UpdatePostAPI from "../../api/UpdatePostAPI";
 import GetPostForInitial from "../../api/GetPostForInintialAPI";
-import {
-  MainForm,
-  FormTitle,
-  FormInput,
-  FormButton,
-  FormErrorMessage,
-} from "../../StyleComponents/StyledForm";
+import { FormErrorMessage } from "../../StyleComponents/StyledForm";
+
+import Input from "../../components/InputForForm/InputForForm";
+import Button from "../../components/ButtonForForm/ButtonForForm";
+import Title from "../../components/TitleForForm/TitleForForm";
+import Form from "../../components/Form/Form";
 
 function PostForm(props) {
   const postId = props.match.params.postId;
@@ -77,8 +76,8 @@ function PostForm(props) {
 
   return (
     <React.Fragment>
-      <MainForm>
-        <FormTitle>{(postId && "Update post:") || "Create post:"}</FormTitle>
+      <Form>
+        <Title>{(postId && "Update post:") || "Create post:"}</Title>
 
         <FormErrorMessage>{message}</FormErrorMessage>
 
@@ -91,7 +90,7 @@ function PostForm(props) {
         {title.isDirty && title.maxLengthError && (
           <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <FormInput
+        <Input
           type="text"
           name="title"
           placeholder="Enter title..."
@@ -99,7 +98,7 @@ function PostForm(props) {
           onChange={(e) => title.onChange(e)}
           onBlur={(e) => title.onBlur(e)}
           required
-        ></FormInput>
+        ></Input>
 
         {description.isDirty && description.isEmpty && (
           <FormErrorMessage>Field can't is empty!</FormErrorMessage>
@@ -110,7 +109,7 @@ function PostForm(props) {
         {description.isDirty && description.maxLengthError && (
           <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <FormInput
+        <Input
           type="text"
           name="description"
           placeholder="Enter description..."
@@ -118,7 +117,7 @@ function PostForm(props) {
           onChange={(e) => description.onChange(e)}
           onBlur={(e) => description.onBlur(e)}
           required
-        ></FormInput>
+        ></Input>
 
         {fullText.isDirty && fullText.isEmpty && (
           <FormErrorMessage>Field can't is empty!</FormErrorMessage>
@@ -129,7 +128,7 @@ function PostForm(props) {
         {fullText.isDirty && fullText.maxLengthError && (
           <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <FormInput
+        <Input
           type="text"
           name="fullText"
           placeholder="Enter text..."
@@ -137,9 +136,9 @@ function PostForm(props) {
           onChange={(e) => fullText.onChange(e)}
           onBlur={(e) => fullText.onBlur(e)}
           required
-        ></FormInput>
+        ></Input>
 
-        <FormButton
+        <Button
           type="submit"
           disabled={
             !title.inputValid || !description.inputValid || !fullText.inputValid
@@ -148,8 +147,8 @@ function PostForm(props) {
           value={(postId && "Update") || "Create"}
         >
           {(postId && "Update") || "Create"}
-        </FormButton>
-      </MainForm>
+        </Button>
+      </Form>
     </React.Fragment>
   );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components";
 
 const MainForm = styled.form`
@@ -13,12 +13,12 @@ const MainForm = styled.form`
   border-radius: 50px;
 `;
 
-function Form({children, ...props}) {
-    return (
-        <>
-            <MainForm {...props}>{children}</MainForm>
-        </>
-    )
+function Form({ children, ...props }) {
+  return (
+    <>
+      <MainForm {...props}>{children}</MainForm>
+    </>
+  );
 }
 
 export default Form;

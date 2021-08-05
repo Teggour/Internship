@@ -3,14 +3,12 @@ import { useInput } from "../../myHooks/useInput";
 import { useDispatch } from "react-redux";
 import AuthAPI from "../../api/AuthAPI";
 
-import Input from '../../components/InputForForm/InputForForm';
-import Button from '../../components/ButtonForForm/ButtonForForm';
+import Input from "../../components/InputForForm/InputForForm";
+import Button from "../../components/ButtonForForm/ButtonForForm";
 import Title from "../../components/TitleForForm/TitleForForm";
 import Form from "../../components/Form/Form";
 
-import {
-  FormErrorMessage,
-} from "../../StyleComponents/StyledForm";
+import { FormErrorMessage } from "../../StyleComponents/StyledForm";
 
 function AuthForm() {
   const email = useInput("", { isEmpty: true, minLength: 4, isEmail: true });
@@ -52,13 +50,15 @@ function AuthForm() {
           <FormErrorMessage>Incorrect email!</FormErrorMessage>
         )}
 
-        <Input type="text"
+        <Input
+          type="text"
           name="email"
           placeholder="Enter email..."
           value={email.value}
           onChange={(e) => email.onChange(e)}
           onBlur={(e) => email.onBlur(e)}
-          required/>
+          required
+        />
 
         {password.isDirty && password.isEmpty && (
           <FormErrorMessage>Field can't is empty!</FormErrorMessage>
