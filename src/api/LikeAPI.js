@@ -20,6 +20,7 @@ const LikeAPI = (
     })
     .catch((error) => {
       console.warn(error);
+      setOnButtonClick(false);
     });
 };
 

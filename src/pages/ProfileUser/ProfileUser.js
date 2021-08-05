@@ -4,7 +4,7 @@ import avatarImg from "../../Images/default_img_for_avatar.png";
 import editImg from "../../Images/edit_img.svg";
 import deleteImg from "../../Images/delete_img.svg";
 import quitImg from "../../Images/quit_img.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentUserName,
   setCurrentUserId,
@@ -15,6 +15,7 @@ import GetUserAPI from "../../api/GetUserAPI";
 
 function ProfileUser(props) {
   const id = props.match.params.userId;
+  const currentUserId = useSelector((state) => state.toolkit.currentUserId);
   const [userData, setUserData] = useState({});
   const dispatch = useDispatch();
 
@@ -37,8 +38,7 @@ function ProfileUser(props) {
 
   useEffect(() => {
     GetUserAPI(id, setUserData);
-    // eslint-disable-next-line
-  }, []);
+  }, [id]);
 
   const { email, name, dateCreated, avatar } = userData;
 
@@ -59,19 +59,21 @@ function ProfileUser(props) {
         <h5>Email: {email}</h5>
         <h5>Date created: {dateCreated}</h5>
 
-        <div className={style.buttons}>
-          <Link to={`${props.location.pathname}/edit`} className={style.link}>
-            <button title="Edit" onClick={clickEditBtn}>
-              <img src={editImg} alt="Edit" />
+        {id === currentUserId && (
+          <div className={style.buttons}>
+            <Link to={`${props.location.pathname}/edit`} className={style.link}>
+              <button title="Edit" onClick={clickEditBtn}>
+                <img src={editImg} alt="Edit" />
+              </button>
+            </Link>
+            <button title="Delete" onClick={clickDeleteBtn}>
+              <img src={deleteImg} alt="Delete" />
             </button>
-          </Link>
-          <button title="Delete" onClick={clickDeleteBtn}>
-            <img src={deleteImg} alt="Delete" />
-          </button>
-          <button title="SignOut" onClick={clickSignOutBtn}>
-            <img src={quitImg} alt="SignOut" />
-          </button>
-        </div>
+            <button title="SignOut" onClick={clickSignOutBtn}>
+              <img src={quitImg} alt="SignOut" />
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

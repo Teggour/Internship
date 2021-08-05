@@ -4,7 +4,7 @@ import {
   setCurrentUserId,
 } from "../reduxToolkit/toolkitSlice";
 
-const AuthAPI = (email, password, setMessage, dispatch) => {
+const AuthAPI = (email, password, setMessage, dispatch, setOnButtonClick) => {
   axios
     .post("/auth", {
       email: email.value,
@@ -18,10 +18,12 @@ const AuthAPI = (email, password, setMessage, dispatch) => {
         localStorage.setItem("userName", response.data.name);
         dispatch(setCurrentUserId(response.data._id));
         dispatch(setCurrentUserName(response.data.name));
+        setOnButtonClick(false);
       });
     })
     .catch((error) => {
       setMessage(error.response.data.error + "!");
+      setOnButtonClick(false);
     });
 };
 

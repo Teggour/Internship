@@ -1,6 +1,6 @@
 import axios from "../axios/axios";
 
-const CreatePostAPI = (title, description, fullText, setMessage) => {
+const CreatePostAPI = (title, description, fullText, setMessage, setOnButtoClick) => {
   axios
     .post("/posts", {
       title: title.value,
@@ -9,9 +9,11 @@ const CreatePostAPI = (title, description, fullText, setMessage) => {
     })
     .then(() => {
       setMessage("Succes created!");
+      setOnButtoClick(false)
     })
     .catch((error) => {
       setMessage(error.response.data.error + "!");
+      setOnButtoClick(false)
     });
 };
 

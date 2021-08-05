@@ -1,41 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useInput } from "../../myHooks/useInput";
-import style from "./form.module.css";
 import { useDispatch } from "react-redux";
 import RegistrationAPI from "../../api/RegistrationAPI";
+import {MainForm, FormTitle, FormInput, FormButton, FormErrorMessage} from "../../StyleComponents/StyledForm"
 
 function RegistrationForm() {
   const name = useInput("", { isEmpty: true, minLength: 4, maxLength: 8 });
   const email = useInput("", { isEmpty: true, minLength: 4, isEmail: true });
   const password = useInput("", { isEmpty: true, minLength: 4, maxLength: 8 });
   const [message, setMessage] = useState("");
+  const [onButtonClick, setOnButtonClick] = useState(false);
 
   const dispatch = useDispatch();
 
   const clickBtn = (e) => {
     e.preventDefault();
 
-    RegistrationAPI(dispatch, email, password, name, setMessage);
+    if (!onButtonClick) {
+      setOnButtonClick(true);
+      RegistrationAPI(dispatch, email, password, name, setMessage, setOnButtonClick);
+    }
   };
+
+  useEffect(() => {
+    return setOnButtonClick;
+  }, [setOnButtonClick]);
 
   return (
     <React.Fragment>
-      <form className={style.form}>
-        <h2>Registration:</h2>
+      <MainForm>
+        <FormTitle>Registration:</FormTitle>
 
-        <div className={style.error}>{message}</div>
+        <FormErrorMessage>{message}</FormErrorMessage>
 
         {name.isDirty && name.isEmpty && (
-          <div className={style.error}>Field can't is empty!</div>
+          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
         )}
         {name.isDirty && name.minLengthError && (
-          <div className={style.error}>Incorrect length... (Too short)!</div>
+          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
         )}
         {name.isDirty && name.maxLengthError && (
-          <div className={style.error}>Incorrect length... (Too long)!</div>
+          <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <input
-          className={style.input}
+        <FormInput
           type="text"
           name="name"
           placeholder="Enter name..."
@@ -43,19 +50,18 @@ function RegistrationForm() {
           onChange={(e) => name.onChange(e)}
           onBlur={(e) => name.onBlur(e)}
           required
-        ></input>
+        ></FormInput>
 
         {email.isDirty && email.isEmpty && (
-          <div className={style.error}>Field can't is empty!</div>
+          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
         )}
         {email.isDirty && email.minLengthError && (
-          <div className={style.error}>Incorrect length... (Too short)!</div>
+          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
         )}
         {email.isDirty && email.emailError && (
-          <div className={style.error}>Incorrect email!</div>
+          <FormErrorMessage>Incorrect email!</FormErrorMessage>
         )}
-        <input
-          className={style.input}
+        <FormInput
           type="text"
           name="email"
           placeholder="Enter email..."
@@ -63,19 +69,18 @@ function RegistrationForm() {
           onChange={(e) => email.onChange(e)}
           onBlur={(e) => email.onBlur(e)}
           required
-        ></input>
+        ></FormInput>
 
         {password.isDirty && password.isEmpty && (
-          <div className={style.error}>Field can't is empty!</div>
+          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
         )}
         {password.isDirty && password.minLengthError && (
-          <div className={style.error}>Incorrect length... (Too short)!</div>
+          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
         )}
         {password.isDirty && password.maxLengthError && (
-          <div className={style.error}>Incorrect length... (Too long)!</div>
+          <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <input
-          className={style.input}
+        <FormInput
           type="password"
           name="password"
           placeholder="Enter password..."
@@ -83,17 +88,16 @@ function RegistrationForm() {
           onChange={(e) => password.onChange(e)}
           onBlur={(e) => password.onBlur(e)}
           required
-        ></input>
+        ></FormInput>
 
-        <button
-          className={style.btn}
+        <FormButton
           type="submit"
           disabled={!email.inputValid || !password.inputValid}
           onClick={clickBtn}
         >
           Registration
-        </button>
-      </form>
+        </FormButton>
+      </MainForm>
     </React.Fragment>
   );
 }

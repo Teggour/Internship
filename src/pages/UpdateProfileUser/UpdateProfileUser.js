@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { useInput } from "../../myHooks/useInput";
-import style from "./form.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUserName } from "../../reduxToolkit/toolkitSlice";
 import UpdateUserAPI from "../../api/UpdateUserAPI";
+import {
+  MainForm,
+  FormTitle,
+  FormInput,
+  FormButton,
+  FormErrorMessage,
+} from "../../StyleComponents/StyledForm";
 
 function UpdateProfileUser(props) {
   const id = props.match.params.userId;
@@ -26,22 +32,21 @@ function UpdateProfileUser(props) {
 
   return (
     <React.Fragment>
-      <form className={style.form}>
-        <h2>Update username:</h2>
+      <MainForm>
+        <FormTitle>Update username:</FormTitle>
 
-        <div className={style.error}>{message}</div>
+        <FormErrorMessage>{message}</FormErrorMessage>
 
         {name.isDirty && name.isEmpty && (
-          <div className={style.error}>Field can't is empty!</div>
+          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
         )}
         {name.isDirty && name.minLengthError && (
-          <div className={style.error}>Incorrect length... (Too short)!</div>
+          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
         )}
         {name.isDirty && name.emailError && (
-          <div className={style.error}>Incorrect email!</div>
+          <FormErrorMessage>Incorrect email!</FormErrorMessage>
         )}
-        <input
-          className={style.input}
+        <FormInput
           type="text"
           name="name"
           placeholder="Enter name..."
@@ -49,17 +54,16 @@ function UpdateProfileUser(props) {
           onChange={(e) => name.onChange(e)}
           onBlur={(e) => name.onBlur(e)}
           required
-        ></input>
+        ></FormInput>
 
-        <button
-          className={style.btn}
+        <FormButton
           type="submit"
           disabled={!name.inputValid}
           onClick={clickBtn}
         >
           Update
-        </button>
-      </form>
+        </FormButton>
+      </MainForm>
     </React.Fragment>
   );
 }

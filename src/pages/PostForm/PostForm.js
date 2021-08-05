@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useInput } from "../../myHooks/useInput";
-import style from "./form.module.css";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updatePost } from "../../reduxToolkit/toolkitSlice";
 import CreatePostAPI from "../../api/CreatePostAPI";
 import UpdatePostAPI from "../../api/UpdatePostAPI";
 import GetPostForInitial from "../../api/GetPostForInintialAPI";
+import {
+  MainForm,
+  FormTitle,
+  FormInput,
+  FormButton,
+  FormErrorMessage,
+} from "../../StyleComponents/StyledForm";
 
 function PostForm(props) {
   const postId = props.match.params.postId;
+  const [onButtonClick, setOnButtoClick] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -41,41 +47,51 @@ function PostForm(props) {
   const clickBtn = (e) => {
     e.preventDefault();
 
-    if (e.target.value === "Create") {
-      CreatePostAPI(title, description, fullText, setMessage);
-    }
+    if (!onButtonClick) {
+      setOnButtoClick(true);
 
-    if (e.target.value === "Update") {
-      UpdatePostAPI(
-        postId,
-        title,
-        description,
-        fullText,
-        setMessage,
-        dispatch,
-        updatePost
-      );
+      console.log("click");
+
+      if (e.target.value === "Create") {
+        CreatePostAPI(
+          title,
+          description,
+          fullText,
+          setMessage,
+          setOnButtoClick
+        );
+      } else if (e.target.value === "Update") {
+        UpdatePostAPI(
+          postId,
+          title,
+          description,
+          fullText,
+          setMessage,
+          dispatch,
+          updatePost,
+          setOnButtoClick
+        );
+      }
     }
   };
 
   return (
     <React.Fragment>
-      <form className={style.form}>
-        <h2>{(postId && "Update post:") || "Create post:"}</h2>
+      <MainForm>
+        <FormTitle>{(postId && "Update post:") || "Create post:"}</FormTitle>
 
-        <div className={style.error}>{message}</div>
+        <FormErrorMessage>{message}</FormErrorMessage>
 
         {title.isDirty && title.isEmpty && (
-          <div className={style.error}>Field can't is empty!</div>
+          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
         )}
         {title.isDirty && title.minLengthError && (
-          <div className={style.error}>Incorrect length... (Too short)!</div>
+          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
         )}
         {title.isDirty && title.maxLengthError && (
-          <div className={style.error}>Incorrect length... (Too long)!</div>
+          <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <input
-          className={style.input}
+        <FormInput
           type="text"
           name="title"
           placeholder="Enter title..."
@@ -83,19 +99,18 @@ function PostForm(props) {
           onChange={(e) => title.onChange(e)}
           onBlur={(e) => title.onBlur(e)}
           required
-        ></input>
+        ></FormInput>
 
         {description.isDirty && description.isEmpty && (
-          <div className={style.error}>Field can't is empty!</div>
+          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
         )}
         {description.isDirty && description.minLengthError && (
-          <div className={style.error}>Incorrect length... (Too short)!</div>
+          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
         )}
         {description.isDirty && description.maxLengthError && (
-          <div className={style.error}>Incorrect length... (Too long)!</div>
+          <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <input
-          className={style.input}
+        <FormInput
           type="text"
           name="description"
           placeholder="Enter description..."
@@ -103,19 +118,18 @@ function PostForm(props) {
           onChange={(e) => description.onChange(e)}
           onBlur={(e) => description.onBlur(e)}
           required
-        ></input>
+        ></FormInput>
 
         {fullText.isDirty && fullText.isEmpty && (
-          <div className={style.error}>Field can't is empty!</div>
+          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
         )}
         {fullText.isDirty && fullText.minLengthError && (
-          <div className={style.error}>Incorrect length... (Too short)!</div>
+          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
         )}
         {fullText.isDirty && fullText.maxLengthError && (
-          <div className={style.error}>Incorrect length... (Too long)!</div>
+          <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
         )}
-        <input
-          className={style.input}
+        <FormInput
           type="text"
           name="fullText"
           placeholder="Enter text..."
@@ -123,10 +137,9 @@ function PostForm(props) {
           onChange={(e) => fullText.onChange(e)}
           onBlur={(e) => fullText.onBlur(e)}
           required
-        ></input>
+        ></FormInput>
 
-        <button
-          className={style.btn}
+        <FormButton
           type="submit"
           disabled={
             !title.inputValid || !description.inputValid || !fullText.inputValid
@@ -135,8 +148,8 @@ function PostForm(props) {
           value={(postId && "Update") || "Create"}
         >
           {(postId && "Update") || "Create"}
-        </button>
-      </form>
+        </FormButton>
+      </MainForm>
     </React.Fragment>
   );
 }
