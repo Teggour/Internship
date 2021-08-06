@@ -7,8 +7,8 @@ import {
 const AuthAPI = (email, password, setMessage, dispatch, setOnButtonClick) => {
   axios
     .post("/auth", {
-      email: email.value,
-      password: password.value,
+      email: email,
+      password: password,
     })
     .then((response) => {
       localStorage.setItem("jwtToken", response.data.token);

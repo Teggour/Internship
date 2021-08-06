@@ -1,63 +1,70 @@
 import React, { useState } from "react";
-import { useInput } from "../../myHooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUserName } from "../../reduxToolkit/toolkitSlice";
 import UpdateUserAPI from "../../api/UpdateUserAPI";
-import { FormErrorMessage } from "../../StyleComponents/StyledForm";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import Input from "../../components/InputForForm/InputForForm";
 import Button from "../../components/ButtonForForm/ButtonForForm";
 import Title from "../../components/TitleForForm/TitleForForm";
 import Form from "../../components/Form/Form";
+import ErrorMessage from "../../components/ErrorMessageForm/ErrorMessageForm";
 
 function UpdateProfileUser(props) {
   const id = props.match.params.userId;
-  const userName = useSelector((state) => state.toolkit.currentUserName);
+  const userName = useSelector((state) => state.toolkit.currentUserName) || "";
 
-  const name = useInput(userName, {
-    isEmpty: true,
-    minLength: 4,
-    maxLength: 8,
-  });
   const [message, setMessage] = useState("");
+  const [onButtonClick, setOnButtonClick] = useState(false);
 
   const dispatch = useDispatch();
 
-  const clickBtn = (e) => {
-    e.preventDefault();
-
-    UpdateUserAPI(id, name, setMessage, dispatch, setCurrentUserName);
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: userName,
+    },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .required("Field is required")
+        .min(4, "Name is too short - should be 4 chars minimum")
+        .max(8, "Name is too long - should be 8 chars maximum"),
+    }),
+    onSubmit: (values) => {
+      if (!onButtonClick) {
+        setOnButtonClick(true);
+        UpdateUserAPI(
+          id,
+          values.name,
+          setMessage,
+          dispatch,
+          setCurrentUserName,
+          setOnButtonClick
+        );
+      }
+    },
+  });
 
   return (
     <React.Fragment>
-      <Form>
-        <Title>Update username:</Title>
+      <Form onSubmit={formik.handleSubmit}>
+        <Title>Update name:</Title>
 
-        <FormErrorMessage>{message}</FormErrorMessage>
+        <ErrorMessage>{message}</ErrorMessage>
 
-        {name.isDirty && name.isEmpty && (
-          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
-        )}
-        {name.isDirty && name.minLengthError && (
-          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
-        )}
-        {name.isDirty && name.emailError && (
-          <FormErrorMessage>Incorrect email!</FormErrorMessage>
-        )}
+        {formik.touched.name && formik.errors.name ? (
+          <ErrorMessage>{formik.errors.name}</ErrorMessage>
+        ) : null}
         <Input
           type="text"
           name="name"
           placeholder="Enter name..."
-          value={name.value}
-          onChange={(e) => name.onChange(e)}
-          onBlur={(e) => name.onBlur(e)}
-          required
-        ></Input>
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.name}
+        />
 
-        <Button type="submit" disabled={!name.inputValid} onClick={clickBtn}>
-          Update
-        </Button>
+        <Button type="submit">Update</Button>
       </Form>
     </React.Fragment>
   );

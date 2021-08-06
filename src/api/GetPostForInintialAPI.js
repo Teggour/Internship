@@ -1,12 +1,14 @@
 import axios from "../axios/axios";
 
-const GetPostForInitial = (postId, title, description, fullText) => {
+const GetPostForInitial = (postId, setPostData) => {
   axios
     .get(`/posts/${postId}`)
     .then((response) => {
-      title.changeValue(response.data.title);
-      description.changeValue(response.data.description);
-      fullText.changeValue(response.data.fullText);
+      setPostData({
+        title: response.data.title,
+        descr: response.data.description,
+        text: response.data.fullText,
+      });
     })
     .catch((error) => {
       console.warn(error);

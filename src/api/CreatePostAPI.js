@@ -3,9 +3,9 @@ import axios from "../axios/axios";
 const CreatePostAPI = (title, description, fullText, setMessage, setOnButtoClick) => {
   axios
     .post("/posts", {
-      title: title.value,
-      description: description.value,
-      fullText: fullText.value,
+      title: title,
+      description: description,
+      fullText: fullText,
     })
     .then(() => {
       setMessage("Succes created!");

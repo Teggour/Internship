@@ -4,9 +4,9 @@ import AuthAPI from "./AuthAPI";
 const RegistrationAPI = (dispatch, email, password, name, setMessage, setOnButtonClick) => {
   axios
     .post("/users", {
-      email: email.value,
-      password: password.value,
-      name: name.value,
+      email: email,
+      password: password,
+      name: name,
     })
     .then((response) => {
       setMessage("Succes create account!");
@@ -15,8 +15,8 @@ const RegistrationAPI = (dispatch, email, password, name, setMessage, setOnButto
       AuthAPI(email, password, setMessage, dispatch, setOnButtonClick);
     })
     .catch((error) => {
-      console.warn(error.response.data.error);
-      setMessage(error.response.data.error + "!");
+      console.log(error);
+      setMessage(error.response.data.error[0].message + "!");
       setOnButtonClick(false);
     });
 };

@@ -1,10 +1,10 @@
 import React from "react";
-import Header from "./pages/Header/Header";
+import Navigation from "./pages/Navigation/Navigation";
 
 function App() {
   return (
     <React.Fragment>
-      <Header />
+      <Navigation />
     </React.Fragment>
   );
 }

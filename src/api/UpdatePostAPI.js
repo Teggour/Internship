@@ -12,9 +12,9 @@ const UpdatePostAPI = (
 ) => {
   axios
     .patch(`/posts/${postId}`, {
-      title: title.value,
-      description: description.value,
-      fullText: fullText.value,
+      title: title,
+      description: description,
+      fullText: fullText,
     })
     .then((response) => {
       setMessage("Succes updated!");

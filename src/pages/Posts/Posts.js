@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Post from "../Post/Post";
+import Post from "../../components/Post/Post";
 import style from "./posts.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {

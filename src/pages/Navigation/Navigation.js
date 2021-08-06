@@ -13,7 +13,7 @@ import UpdateProfileUser from "../UpdateProfileUser/UpdateProfileUser";
 import ProfileUser from "../ProfileUser/ProfileUser";
 import PostForm from "../PostForm/PostForm";
 
-function Header() {
+function Navigation() {
   const currentUser = useSelector((state) => state.toolkit.currentUserId);
 
   return (
@@ -55,4 +55,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default Navigation;

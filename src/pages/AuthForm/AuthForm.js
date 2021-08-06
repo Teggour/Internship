@@ -1,91 +1,90 @@
 import React, { useEffect, useState } from "react";
-import { useInput } from "../../myHooks/useInput";
 import { useDispatch } from "react-redux";
 import AuthAPI from "../../api/AuthAPI";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import Input from "../../components/InputForForm/InputForForm";
 import Button from "../../components/ButtonForForm/ButtonForForm";
 import Title from "../../components/TitleForForm/TitleForForm";
 import Form from "../../components/Form/Form";
-
-import { FormErrorMessage } from "../../StyleComponents/StyledForm";
+import ErrorMessage from "../../components/ErrorMessageForm/ErrorMessageForm";
 
 function AuthForm() {
-  const email = useInput("", { isEmpty: true, minLength: 4, isEmail: true });
-  const password = useInput("", { isEmpty: true, minLength: 4, maxLength: 8 });
   const [message, setMessage] = useState("");
   const [onButtonClick, setOnButtonClick] = useState(false);
 
   const dispatch = useDispatch();
 
-  const clickBtn = (e) => {
-    e.preventDefault();
-
-    if (!onButtonClick) {
-      console.log("click");
-      setOnButtonClick(true);
-
-      AuthAPI(email, password, setMessage, dispatch, setOnButtonClick);
-    }
-  };
-
   useEffect(() => {
     return setOnButtonClick;
   }, [setOnButtonClick]);
 
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Field is required"),
+      password: Yup.string()
+        .required("Field is required")
+        .min(4, "Password is too short - should be 4 chars minimum")
+        .max(8, "Password is too long - should be 8 chars maximum")
+        .matches(
+          /[a-zA-Z0-9]/,
+          "Password can only contain Latin letters and numbers"
+        ),
+    }),
+    onSubmit: (values) => {
+      if (!onButtonClick) {
+        setOnButtonClick(true);
+
+        AuthAPI(
+          values.email,
+          values.password,
+          setMessage,
+          dispatch,
+          setOnButtonClick
+        );
+      }
+    },
+  });
+
   return (
     <React.Fragment>
-      <Form>
+      <Form onSubmit={formik.handleSubmit}>
         <Title>Authorization:</Title>
 
-        <FormErrorMessage>{message}</FormErrorMessage>
+        <ErrorMessage>{message}</ErrorMessage>
 
-        {email.isDirty && email.isEmpty && (
-          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
-        )}
-        {email.isDirty && email.minLengthError && (
-          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
-        )}
-        {email.isDirty && email.emailError && (
-          <FormErrorMessage>Incorrect email!</FormErrorMessage>
-        )}
-
+        {formik.touched.email && formik.errors.email ? (
+          <ErrorMessage>{formik.errors.email}</ErrorMessage>
+        ) : null}
         <Input
           type="text"
           name="email"
           placeholder="Enter email..."
-          value={email.value}
-          onChange={(e) => email.onChange(e)}
-          onBlur={(e) => email.onBlur(e)}
-          required
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.email}
         />
 
-        {password.isDirty && password.isEmpty && (
-          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
-        )}
-        {password.isDirty && password.minLengthError && (
-          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
-        )}
-        {password.isDirty && password.maxLengthError && (
-          <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
-        )}
+        {formik.touched.password && formik.errors.password ? (
+          <ErrorMessage>{formik.errors.password}</ErrorMessage>
+        ) : null}
         <Input
           type="password"
           name="password"
           placeholder="Enter password..."
-          value={password.value}
-          onChange={(e) => password.onChange(e)}
-          onBlur={(e) => password.onBlur(e)}
-          required
-        ></Input>
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.password}
+        />
 
-        <Button
-          type="submit"
-          disabled={!email.inputValid || !password.inputValid}
-          onClick={clickBtn}
-        >
-          Log In
-        </Button>
+        <Button type="submit">Log In</Button>
       </Form>
     </React.Fragment>
   );

@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useInput } from "../../myHooks/useInput";
 import { useDispatch } from "react-redux";
 import { updatePost } from "../../reduxToolkit/toolkitSlice";
 import CreatePostAPI from "../../api/CreatePostAPI";
 import UpdatePostAPI from "../../api/UpdatePostAPI";
 import GetPostForInitial from "../../api/GetPostForInintialAPI";
-import { FormErrorMessage } from "../../StyleComponents/StyledForm";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import Input from "../../components/InputForForm/InputForForm";
 import Button from "../../components/ButtonForForm/ButtonForForm";
 import Title from "../../components/TitleForForm/TitleForForm";
 import Form from "../../components/Form/Form";
+import ErrorMessage from "../../components/ErrorMessageForm/ErrorMessageForm";
 
 function PostForm(props) {
   const postId = props.match.params.postId;
   const [onButtonClick, setOnButtoClick] = useState(false);
+  const [postData, setPostData] = useState({ title: "", descr: "", text: "" });
 
   const dispatch = useDispatch();
 
@@ -22,132 +24,104 @@ function PostForm(props) {
 
   useEffect(() => {
     if (postId) {
-      GetPostForInitial(postId, title, description, fullText);
+      GetPostForInitial(postId, setPostData);
     }
     // eslint-disable-next-line
   }, []);
 
-  const title = useInput("", {
-    isEmpty: true,
-    minLength: 5,
-    maxLength: 36,
-  });
-  const description = useInput("", {
-    isEmpty: true,
-    minLength: 5,
-    maxLength: 36,
-  });
-  const fullText = useInput("", {
-    isEmpty: true,
-    minLength: 20,
-    maxLength: 54,
-  });
+  const formik = useFormik({
+    initialValues: {
+      title: postData.title,
+      description: postData.descr,
+      fullText: postData.text,
+    },
+    enableReinitialize: true,
+    validationSchema: Yup.object({
+      title: Yup.string()
+        .required("Field is required")
+        .min(5, "Title is too short - should be 5 chars minimum")
+        .max(36, "Title is too long - should be 36 chars maximum"),
+      description: Yup.string()
+        .required("Field is required")
+        .min(5, "Description is too short - should be 5 chars minimum")
+        .max(36, "Description is too long - should be 36 chars maximum"),
+      fullText: Yup.string()
+        .required("Field is required")
+        .min(20, "Text is too short - should be 20 chars minimum")
+        .max(54, "Text is too long - should be 54 chars maximum"),
+    }),
+    onSubmit: (values) => {
+      if (!onButtonClick) {
+        setOnButtoClick(true);
 
-  const clickBtn = (e) => {
-    e.preventDefault();
-
-    if (!onButtonClick) {
-      setOnButtoClick(true);
-
-      console.log("click");
-
-      if (e.target.value === "Create") {
-        CreatePostAPI(
-          title,
-          description,
-          fullText,
-          setMessage,
-          setOnButtoClick
-        );
-      } else if (e.target.value === "Update") {
-        UpdatePostAPI(
-          postId,
-          title,
-          description,
-          fullText,
-          setMessage,
-          dispatch,
-          updatePost,
-          setOnButtoClick
-        );
+        if (!postId) {
+          CreatePostAPI(
+            values.title,
+            values.description,
+            values.fullText,
+            setMessage,
+            setOnButtoClick
+          );
+        } else {
+          UpdatePostAPI(
+            postId,
+            values.title,
+            values.description,
+            values.fullText,
+            setMessage,
+            dispatch,
+            updatePost,
+            setOnButtoClick
+          );
+        }
       }
-    }
-  };
+    },
+  });
 
   return (
     <React.Fragment>
-      <Form>
+      <Form onSubmit={formik.handleSubmit}>
         <Title>{(postId && "Update post:") || "Create post:"}</Title>
 
-        <FormErrorMessage>{message}</FormErrorMessage>
+        <ErrorMessage>{message}</ErrorMessage>
 
-        {title.isDirty && title.isEmpty && (
-          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
-        )}
-        {title.isDirty && title.minLengthError && (
-          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
-        )}
-        {title.isDirty && title.maxLengthError && (
-          <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
-        )}
+        {formik.touched.title && formik.errors.title ? (
+          <ErrorMessage>{formik.errors.title}</ErrorMessage>
+        ) : null}
         <Input
           type="text"
           name="title"
           placeholder="Enter title..."
-          value={title.value}
-          onChange={(e) => title.onChange(e)}
-          onBlur={(e) => title.onBlur(e)}
-          required
-        ></Input>
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.title}
+        />
 
-        {description.isDirty && description.isEmpty && (
-          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
-        )}
-        {description.isDirty && description.minLengthError && (
-          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
-        )}
-        {description.isDirty && description.maxLengthError && (
-          <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
-        )}
+        {formik.touched.description && formik.errors.description ? (
+          <ErrorMessage>{formik.errors.description}</ErrorMessage>
+        ) : null}
         <Input
           type="text"
           name="description"
           placeholder="Enter description..."
-          value={description.value}
-          onChange={(e) => description.onChange(e)}
-          onBlur={(e) => description.onBlur(e)}
-          required
-        ></Input>
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.description}
+        />
 
-        {fullText.isDirty && fullText.isEmpty && (
-          <FormErrorMessage>Field can't is empty!</FormErrorMessage>
-        )}
-        {fullText.isDirty && fullText.minLengthError && (
-          <FormErrorMessage>Incorrect length... (Too short)!</FormErrorMessage>
-        )}
-        {fullText.isDirty && fullText.maxLengthError && (
-          <FormErrorMessage>Incorrect length... (Too long)!</FormErrorMessage>
-        )}
+        {formik.touched.fullText && formik.errors.fullText ? (
+          <ErrorMessage>{formik.errors.fullText}</ErrorMessage>
+        ) : null}
         <Input
           type="text"
           name="fullText"
           placeholder="Enter text..."
-          value={fullText.value}
-          onChange={(e) => fullText.onChange(e)}
-          onBlur={(e) => fullText.onBlur(e)}
-          required
-        ></Input>
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.fullText}
+        />
 
-        <Button
-          type="submit"
-          disabled={
-            !title.inputValid || !description.inputValid || !fullText.inputValid
-          }
-          onClick={clickBtn}
-          value={(postId && "Update") || "Create"}
-        >
-          {(postId && "Update") || "Create"}
-        </Button>
+        <Button type="submit">{(postId && "Update") || "Create"}</Button>
       </Form>
     </React.Fragment>
   );
