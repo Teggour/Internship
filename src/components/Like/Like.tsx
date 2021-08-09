@@ -1,7 +1,12 @@
-import React from "react";
+import * as React from "react";
 import { MySVG, MyPath } from "./styled";
 
-function Like({ newfill }) {
+interface IProps {
+  newfill: string;
+  // any other props that come into the component
+}
+
+const Like:React.FC<IProps> = ({ newfill }) => {
   return (
     <MySVG viewBox="0 0 391.837 391.837">
       <MyPath

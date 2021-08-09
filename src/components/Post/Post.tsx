@@ -2,7 +2,14 @@ import readMoreImg from "../../Images/read-more_img.png";
 import { Link } from "react-router-dom";
 import { DemoPost, Descr } from "./styled";
 
-function Post({ postData }) {
+
+interface IProps {
+  // title: string; description: string; postedBy: string; _id: string;
+  postData: object;
+  // Object.keys(postData): ;
+}
+
+const Post:React.FC<IProps> = ({ postData }) => {
   const { title, description, postedBy, _id } = postData;
 
   return (
