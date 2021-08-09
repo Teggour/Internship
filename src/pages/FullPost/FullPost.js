@@ -20,7 +20,7 @@ function FullPost(props) {
   const dispatch = useDispatch();
 
   const clickLike = () => {
-    if (!onButtonClick) {
+    if (!onButtonClick && currentUserId) {
       setOnButtonClick(true);
 
       LikeAPI(postId, postLikes, currentUserId, setPostLikes, setOnButtonClick);
