@@ -36,7 +36,7 @@ function RegistrationForm() {
         .required("Field is required"),
       password: Yup.string()
         .required("Field is required")
-        .min(4, "Password is too short - should be 4 chars minimum")
+        .min(5, "Password is too short - should be 5 chars minimum")
         .max(8, "Password is too long - should be 8 chars maximum")
         .matches(
           /[a-zA-Z0-9]/,

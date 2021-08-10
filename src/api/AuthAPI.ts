@@ -1,10 +1,21 @@
+import React from "react";
 import axios from "../axios/axios";
 import {
   setCurrentUserName,
   setCurrentUserId,
 } from "../reduxToolkit/toolkitSlice";
 
-const AuthAPI = (email, password, setMessage, dispatch, setOnButtonClick) => {
+interface IProps {
+    email: string;
+    password: string;
+    setMessage: React.Dispatch<React.SetStateAction<string>>;
+    dispatch: React.Dispatch<any>;
+    setOnButtonClick: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const AuthAPI = (props: IProps) => {
+  const { email, password, setMessage, dispatch, setOnButtonClick } = props;
+
   axios
     .post("/auth", {
       email: email,
@@ -23,6 +34,7 @@ const AuthAPI = (email, password, setMessage, dispatch, setOnButtonClick) => {
     })
     .catch((error) => {
       setMessage(error.response.data.error + "!");
+      // console.log(error.response.data.error[0].message);
       setOnButtonClick(false);
     });
 };

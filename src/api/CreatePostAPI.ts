@@ -1,6 +1,16 @@
 import axios from "../axios/axios";
 
-const CreatePostAPI = (title, description, fullText, setMessage, setOnButtoClick) => {
+interface IProps {
+  title: string;
+  description: string;
+  fullText: string;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
+  setOnButtoClick: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const CreatePostAPI = (props: IProps) => {
+  const {title, description, fullText, setMessage, setOnButtoClick} = props;
+
   axios
     .post("/posts", {
       title: title,
